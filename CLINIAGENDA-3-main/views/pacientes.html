@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CliniAgenda | Pacientes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="../assets/css/bootstrap_min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <nav class="navbar navbar-light navbar-expand-lg sticky-top clinic-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">CliniAgenda</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+      
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item">  <a class="nav-link" href="pacientes.html">Pacientes</a></li>
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link" href="agenda.html">Agenda</a></li>	         
+          
+          <li id="navNuevoPaciente" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link" href="paciente-form.html">+ Nuevo paciente</a></li>
+          
+          <li th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''USER'')')}" class="nav-item"><a class="btn btn-primary ms-lg-2" href="regiscita.html">Reservar cita</a></li>
+          <li class="nav-item"><a class="nav-link" href="agenda-medico.html">Agenda Médico</a></li>
+          
+          <li th:if="${#authentication.name == 'anonymousUser'}" class="nav-item"><a class="nav-link active" href="acceso.html">Crear cuenta / Iniciar sesión</a> </li>
+          
+          <li class="nav-item theme-nav-item ms-lg-2">
+            <button type="button" id="btn-theme-toggle" class="btn btn-outline-secondary btn-sm" aria-label="Alternar modo oscuro">
+              🌙
+            </button>
+          </li>
+
+        </ul>
+                   
+        
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow-1">
+    <section class="py-5">
+      <div class="container">
+
+        <!-- Cabecera -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end mb-4 gap-3">
+          <div>
+            <p class="section-eyebrow mb-2">Módulo · PacienteController</p>
+            <h2 class="section-title mb-0">Pacientes registrados</h2>
+          </div>
+          <!--
+            th:text con expresión: concatena el total dinámico
+            El atributo "total" lo envía PacienteController.listarPacientes()
+          -->
+          <p class="text-secondary mb-0">
+            Total registrados: <strong id="totalRegistrados">0</strong>
+          </p>
+        </div>
+
+        <section id="solicitudesPacientesPanel" class="card border-0 shadow-sm mb-4 d-none" aria-labelledby="solicitudesPacientesTitulo">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+              <div>
+                <p class="section-eyebrow mb-1">Recepción</p>
+                <h3 id="solicitudesPacientesTitulo" class="h5 mb-0">Solicitudes de corrección de expedientes</h3>
+              </div>
+              <span class="badge text-bg-warning" id="totalSolicitudesPacientes">0 pendientes</span>
+            </div>
+            <div id="listaSolicitudesPacientes" class="d-grid gap-2"></div>
+          </div>
+        </section>
+
+        <!--
+          A partir de aquí, la tabla se pinta 100% desde localStorage
+          mediante pacientes.js (renderTabla()). Los pacientes se guardan
+          ahí cuando se crean en paciente-form.html.
+        -->
+        <div class="card border-0 shadow-sm d-none" id="contenedorTabla">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre completo</th>
+                  <th scope="col">DNI</th>
+                  <th scope="col">Correo</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">F. Nacimiento</th>
+                  <th scope="col">Sexo</th>
+                  <th scope="col" class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaPacientesBody">
+                <!-- Filas generadas dinámicamente por pacientes.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Estado vacío -->
+        <div class="text-center py-5" id="estadoVacio">
+          <p class="text-secondary mb-3">No hay pacientes registrados aún.</p>
+          <a href="paciente-form.html" class="btn btn-primary">Registrar el primer paciente</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+    </div>
+  </footer>
+
+
+
+<div class="modal fade" id="modalEditarPaciente" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title fw-bold" id="modalEditarLabel">Editar Datos del Paciente</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{/pacientes/editar}" method="post">
+          <div class="modal-body p-4">
+            
+            <input type="hidden" id="edit-id" name="id" />
+
+            <div class="mb-3">
+              <label for="edit-nombre" class="form-label fw-medium">Nombre completo</label>
+              <input type="text" class="form-control" id="edit-nombre" name="nombre" required minlength="3" maxlength="100" />
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="edit-dni" class="form-label fw-medium">DNI (8 dígitos)</label>
+                <input type="text" class="form-control" id="edit-dni" name="dni" required pattern="\d{8}" title="Debe tener 8 dígitos numéricos" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="edit-telefono" class="form-label fw-medium">Teléfono (9 dígitos)</label>
+                <input type="text" class="form-control" id="edit-telefono" name="telefono" required pattern="\d{9}" title="Debe tener 9 dígitos numéricos" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="edit-email" class="form-label fw-medium">Correo electrónico</label>
+              <input type="email" class="form-control" id="edit-email" name="email" required />
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="edit-fecha" class="form-label fw-medium">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="edit-fecha" name="fechaNacimiento" required />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="edit-sexo" class="form-label fw-medium">Sexo</label>
+                <select class="form-select" id="edit-sexo" name="sexo" required>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="edit-direccion" class="form-label fw-medium">Dirección (Opcional)</label>
+              <input type="text" class="form-control" id="edit-direccion" name="direccion" />
+            </div>
+
+          </div>
+          <div class="modal-footer bg-light border-0">
+            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary px-4">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/bootstrap_bundle_min.js"></script>
+  <script src="../models/Usuario.js"></script>
+  <script src="../models/Paciente.js"></script>
+  <script src="../models/Cita.js"></script>
+  <script src="../models/index.js"></script>
+  <script src="../controllers/permisos.js"></script>
+  <script src="../controllers/app.js"></script>
+  <script src="../controllers/pacientes.js"></script>
+</body>
+</html>

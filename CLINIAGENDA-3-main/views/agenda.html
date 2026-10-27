@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CliniAgenda | Agenda de citas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="../assets/css/bootstrap_min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <nav class="navbar navbar-light navbar-expand-lg sticky-top clinic-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">CliniAgenda</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+           
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item">  <a class="nav-link" href="pacientes.html">Pacientes</a></li>
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link" href="agenda.html">Agenda</a></li>	         
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link" href="paciente-form.html">+ Nuevo paciente</a></li>
+          
+          <li th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''USER'')')}" class="nav-item"><a class="btn btn-primary ms-lg-2" href="regiscita.html">Reservar cita</a></li>
+          <li class="nav-item"><a class="nav-link" href="agenda-medico.html">Agenda Médico</a></li>
+          
+          <li th:if="${#authentication.name == 'anonymousUser'}" class="nav-item"><a class="nav-link active" href="acceso.html">Crear cuenta / Iniciar sesión</a> </li>
+          <li class="nav-item theme-nav-item ms-lg-2">
+            <button type="button" id="btn-theme-toggle" class="btn btn-outline-secondary btn-sm" aria-label="Alternar modo oscuro">
+              🌙
+            </button>
+          </li>
+         
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow-1">
+
+    <!-- =====================================================
+         RESUMEN DE RECEPCIÓN
+         Métricas generales calculadas desde localStorage
+         (claves "pacientes" y "citas").
+    ====================================================== -->
+    <section class="py-5">
+      <div class="container">
+
+        <div class="mb-4">
+          <p class="section-eyebrow mb-2">Panel general</p>
+          <h2 class="section-title mb-0">Resumen de recepción</h2>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon">👥</div>
+              <strong id="statTotalPacientes">0</strong>
+              <span>Pacientes registrados</span>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-green">
+              <div class="stat-icon">🗓️</div>
+              <strong id="statTotalCitas">0</strong>
+              <span>Citas registradas</span>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card stat-amber">
+              <div class="stat-icon">⏰</div>
+              <strong id="statCitasHoy">0</strong>
+              <span>Citas para hoy</span>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon">📨</div>
+              <strong id="statCitasPendientesConfirmacion">0</strong>
+              <span>Citas por confirmar</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECCIÓN: AGENDA GENERAL DE CITAS
+         Las citas se guardan y leen desde localStorage
+         (clave "citas"), creadas desde regiscita.html.
+    ====================================================== -->
+    <section id="agenda" class="py-5 section-soft">
+      <div class="container">
+
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end mb-4 gap-3">
+          <div>
+            <p class="section-eyebrow mb-2">Agenda visual</p>
+            <h2 class="section-title mb-0">Citas programadas</h2>
+          </div>
+          <div class="text-lg-end">
+            <p class="text-secondary mb-1 section-copy">
+              Revisa las solicitudes, confirma las citas y gestiona cambios desde recepción. Al cambiar una cita,
+              deberá confirmarse nuevamente.
+            </p>
+            <p class="mb-0 small">
+              Estados: por confirmar, confirmada, atendida o cancelada. Recepción puede preparar un recordatorio por WhatsApp después de confirmar la cita.
+            </p>
+          </div>
+        </div>
+
+        <!-- Grid de citas — generado dinámicamente por Agenda.js -->
+        <div class="row g-4" id="agendaGrid"></div>
+
+        <!-- Mensaje si no hay citas registradas -->
+        <div class="col-12" id="agendaVacio">
+          <p class="text-secondary text-center py-4">
+            No hay citas registradas. Las solicitudes nuevas aparecerán aquí para que recepción las revise.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4 mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      
+    </div>
+  </footer>
+
+  <!-- =====================================================
+       MODAL: Detalle de cita
+  ====================================================== -->
+  <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="appointmentModalLabel">Detalle de cita</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-detail">
+            <span class="modal-label">Paciente</span>
+            <p id="modalPatient" class="mb-3"></p>
+            <span class="modal-label">DNI</span>
+            <p id="modalPatientDni" class="mb-3"></p>
+            <span class="modal-label">Correo</span>
+            <p id="modalPatientEmail" class="mb-3"></p>
+            <span class="modal-label">Teléfono</span>
+            <p id="modalPatientPhone" class="mb-3"></p>
+            <span class="modal-label">Servicio</span>
+            <p id="modalService" class="mb-3"></p>
+            <span class="modal-label">Médico</span>
+            <p id="modalDoctor" class="mb-3"></p>
+            <span class="modal-label">Fecha y hora</span>
+            <p id="modalSchedule" class="mb-3"></p>
+            <span class="modal-label">Modalidad</span>
+            <p id="modalMode" class="mb-3"></p>
+            <span class="modal-label">Observaciones</span>
+            <p id="modalNotes" class="mb-0"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MODAL: Editar cita
+  ====================================================== -->
+  <div class="modal fade" id="modalEditarCita" tabindex="-1" aria-labelledby="modalEditarCitaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-dark text-white">
+          <h2 class="modal-title fs-5" id="modalEditarCitaLabel">Editar cita</h2>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <form id="formEditarCita">
+          <div class="modal-body p-4">
+
+            <input type="hidden" id="edit-cita-id">
+            <input type="hidden" id="edit-cita-patient-dni">
+            <input type="hidden" id="edit-cita-patient-email">
+            <input type="hidden" id="edit-cita-patient-phone">
+            <div id="errorHorarioEditarCita" class="alert alert-danger d-none" role="alert">
+              El doctor ya tiene una cita en esa fecha y hora. Selecciona otro horario.
+            </div>
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label for="edit-cita-patient" class="form-label">Paciente</label>
+                <div class="input-group">
+                  <input type="text" id="edit-cita-patient" class="form-control" readonly required>
+                  <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalBuscarPacienteAgenda">
+                    Buscar
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edit-cita-doctor" class="form-label">Médico</label>
+                <div class="input-group">
+                  <input type="text" id="edit-cita-doctor" class="form-control" readonly required>
+                  <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalBuscarMedicoAgenda">
+                    Buscar
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edit-cita-service" class="form-label">Servicio</label>
+                <select id="edit-cita-service" class="form-select" required>
+                  <option value="">Seleccionar servicio</option>
+                  <option value="Medicina General">Medicina General</option>
+                  <option value="Pediatría">Pediatría</option>
+                  <option value="Cardiología">Cardiología</option>
+                  <option value="Odontología">Odontología</option>
+                  <option value="Ginecología">Ginecología</option>
+                  <option value="Laboratorio">Laboratorio</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edit-cita-date" class="form-label">Fecha</label>
+                <input type="date" id="edit-cita-date" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edit-cita-time" class="form-label">Hora</label>
+                <select id="edit-cita-time" class="form-select" required>
+                  <option value="">Seleccionar hora</option>
+                  <option value="08:00">08:00</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="edit-cita-mode" class="form-label">Modalidad</label>
+                <select id="edit-cita-mode" class="form-select" required>
+                  <option value="">Seleccionar modalidad</option>
+                  <option value="Presencial">Presencial</option>
+                  <option value="Teleconsulta">Teleconsulta</option>
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label for="edit-cita-notes" class="form-label">Observaciones</label>
+                <textarea id="edit-cita-notes" class="form-control" rows="3"></textarea>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-0">
+            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary px-4">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MODAL: Buscar paciente (para editar cita)
+  ====================================================== -->
+  <div class="modal fade" id="modalBuscarPacienteAgenda" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5">Seleccionar paciente</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="buscarPacienteAgendaInput" class="form-control mb-3" placeholder="Buscar por nombre o DNI...">
+          <div id="listaPacientesAgenda" class="list-group" style="max-height: 320px; overflow-y: auto;"></div>
+          <p id="sinPacientesAgenda" class="text-secondary text-center mt-3 mb-0 d-none">
+            No hay pacientes registrados todavía.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MODAL: Buscar médico (para editar cita)
+  ====================================================== -->
+  <div class="modal fade" id="modalBuscarMedicoAgenda" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5">Seleccionar médico</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="buscarMedicoAgendaInput" class="form-control mb-3" placeholder="Buscar por nombre o especialidad...">
+          <div id="listaMedicosAgenda" class="list-group" style="max-height: 320px; overflow-y: auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MODAL: Preparar recordatorio por WhatsApp
+  ====================================================== -->
+  <div class="modal fade" id="modalRecordatorio" tabindex="-1" aria-labelledby="modalRecordatorioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="modalRecordatorioLabel">Preparar recordatorio por WhatsApp</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-secondary">Revisa el número del paciente. WhatsApp abrirá un mensaje preparado; recepción debe verificarlo y enviarlo desde WhatsApp.</p>
+          <label for="recordatorioNumero" class="form-label">Número de WhatsApp (9 dígitos)</label>
+          <input type="tel" id="recordatorioNumero" class="form-control" placeholder="Ej. 987654321" maxlength="9">
+          <div id="recordatorioError" class="text-danger small mt-2 d-none">Ingresa un número válido de 9 dígitos.</div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" id="btnConfirmarRecordatorio">Abrir WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/bootstrap_bundle_min.js"></script>
+  <script src="../models/Usuario.js"></script>
+  <script src="../models/Paciente.js"></script>
+  <script src="../models/Cita.js"></script>
+  <script src="../models/index.js"></script>
+  <script src="../controllers/permisos.js"></script>
+  <script src="../controllers/app.js"></script>
+  <script src="../controllers/agenda.js"></script>
+</body>
+</html>

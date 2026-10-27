@@ -1,0 +1,2699 @@
+/* =========================================================
+   CLINIAGENDA
+   Sistema de Gestión Hospitalaria
+   Colores: Blanco + Azul + Verde
+========================================================= */
+
+:root {
+
+    /* Colores principales */
+    --clinic-primary: #1976D2;
+    --clinic-primary-dark: #125CA8;
+    --clinic-blue-light: #EAF4FF;
+
+    --clinic-green: #20A67A;
+    --clinic-green-dark: #16845F;
+    --clinic-green-light: #EAF8F3;
+
+    /* Colores generales */
+    --clinic-ink: #17324D;
+    --clinic-text: #40566B;
+    --clinic-muted: #718394;
+
+    --clinic-bg: #F5F9FC;
+    --clinic-surface: #FFFFFF;
+
+    --clinic-border: #DDE7EF;
+
+    /* Sombras */
+    --clinic-shadow-sm: 0 4px 14px rgba(23, 50, 77, 0.06);
+    --clinic-shadow-md: 0 10px 30px rgba(23, 50, 77, 0.09);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    margin: 0;
+
+    font-family: 'Outfit', sans-serif;
+
+    background: var(--clinic-bg);
+
+    color: var(--clinic-ink);
+
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+}
+
+a {
+    color: var(--clinic-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--clinic-primary-dark);
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.clinic-navbar {
+
+    background: #FFFFFF !important;
+
+    border-bottom: 1px solid var(--clinic-border);
+
+    box-shadow: var(--clinic-shadow-sm);
+
+    min-height: 72px;
+}
+
+.clinic-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: var(--clinic-ink) !important;
+
+    font-size: 1.25rem;
+
+    font-weight: 700;
+}
+
+.brand-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 32px;
+
+    height: 32px;
+
+    border-radius: 9px;
+
+    background: var(--clinic-primary);
+
+    color: #FFFFFF;
+
+    font-size: 1.4rem;
+
+    font-weight: 500;
+
+    line-height: 1;
+}
+
+.clinic-navbar .navbar-nav {
+    align-items: center;
+}
+
+.clinic-navbar .nav-link,
+.clinic-navbar .navbar-nav .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: .45rem .8rem !important;
+    border: 0;
+    border-radius: 999px;
+    background: transparent !important;
+    color: var(--clinic-text) !important;
+    font-size: .93rem;
+    font-weight: 500;
+    transition: color .2s ease, background-color .2s ease;
+}
+
+.clinic-navbar .nav-link::after,
+.clinic-navbar .navbar-nav .btn::after {
+    content: "";
+    position: absolute;
+    left: .8rem;
+    right: .8rem;
+    bottom: .1rem;
+    height: 2px;
+    border-radius: 999px;
+    background: transparent;
+    transition: background-color .2s ease, transform .2s ease;
+    transform: scaleX(0);
+    transform-origin: center;
+}
+
+.clinic-navbar .nav-link:hover,
+.clinic-navbar .navbar-nav .btn:hover,
+.clinic-navbar .nav-link:focus-visible,
+.clinic-navbar .navbar-nav .btn:focus-visible {
+    color: var(--clinic-primary) !important;
+    background: rgba(25, 118, 210, 0.04) !important;
+}
+
+.clinic-navbar .nav-link:hover::after,
+.clinic-navbar .navbar-nav .btn:hover::after,
+.clinic-navbar .nav-link:focus-visible::after,
+.clinic-navbar .navbar-nav .btn:focus-visible::after {
+    background: var(--clinic-primary);
+    transform: scaleX(1);
+}
+
+.clinic-navbar .nav-link.active {
+    color: var(--clinic-primary) !important;
+    font-weight: 600;
+}
+
+.clinic-navbar .nav-link.active::after {
+    background: var(--clinic-primary);
+    transform: scaleX(1);
+}
+
+@media (max-width: 991.98px) {
+    .clinic-navbar .container {
+        position: relative;
+    }
+
+    .clinic-navbar .navbar-toggler {
+        position: relative;
+        z-index: 1051;
+        border-color: var(--clinic-border);
+    }
+
+    .clinic-navbar .navbar-collapse {
+        position: fixed;
+        top: 72px;
+        right: 0;
+        left: auto;
+        bottom: 0;
+        z-index: 1050;
+        width: min(82vw, 320px);
+        height: calc(100vh - 72px);
+        max-height: none;
+        padding: 1rem;
+        overflow-y: auto;
+        background: var(--clinic-surface);
+        border-left: 1px solid var(--clinic-border);
+        border-bottom: 1px solid var(--clinic-border);
+        box-shadow: var(--clinic-shadow-md);
+    }
+
+    .clinic-navbar .navbar-collapse.collapsing {
+        height: calc(100vh - 72px) !important;
+    }
+
+    .clinic-navbar .navbar-nav {
+        align-items: stretch;
+        gap: .25rem !important;
+    }
+
+    .clinic-navbar .nav-link,
+    .clinic-navbar .navbar-nav .btn {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        padding: .8rem 1rem !important;
+        text-align: left;
+    }
+
+    .clinic-navbar .nav-link.active::after,
+    .clinic-navbar .navbar-nav .btn::after {
+        display: none;
+    }
+
+    .clinic-navbar .navbar-nav .ms-lg-2 {
+        margin-left: 0 !important;
+        margin-top: .5rem;
+    }
+
+    .clinic-navbar .session-nav-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        align-self: flex-start;
+        width: auto;
+        padding: 0;
+        margin: .5rem 0 0 !important;
+    }
+
+    .clinic-navbar .theme-nav-item {
+        margin-top: .75rem;
+    }
+
+    .clinic-navbar #btn-theme-toggle {
+        width: 2.5rem;
+        min-width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
+}
+
+.clinic-navbar #btn-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--clinic-border);
+    border-radius: 50%;
+    background: var(--clinic-surface);
+    color: var(--clinic-ink);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+
+.clinic-navbar #btn-theme-toggle:hover,
+.clinic-navbar #btn-theme-toggle:focus-visible {
+    color: var(--clinic-primary-dark);
+    background: var(--clinic-blue-light);
+    border-color: var(--clinic-primary);
+    transform: translateY(-1px);
+}
+
+.clinic-navbar .session-nav-item {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    padding: 0;
+}
+
+.clinic-navbar .session-role {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.6rem;
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    background: var(--clinic-green-light);
+    color: var(--clinic-green-dark);
+    font-size: .68rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+[data-bs-theme="dark"] .clinic-navbar #btn-theme-toggle {
+    color: #F8FAFC;
+    background: #243447;
+    border-color: #526579;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .session-role {
+    background: rgba(32, 166, 122, 0.12);
+    color: #a7f3d0;
+}
+
+.clinic-btn-nav {
+    border-radius: 8px;
+    padding: .55rem 1rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.btn {
+
+    font-family: 'Outfit', sans-serif;
+
+    font-weight: 600;
+
+    border-radius: 8px;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.btn-primary {
+
+    background: var(--clinic-primary) !important;
+
+    border-color: var(--clinic-primary) !important;
+
+    color: #FFFFFF !important;
+}
+
+.btn-primary:hover {
+
+    background: var(--clinic-primary-dark) !important;
+
+    border-color: var(--clinic-primary-dark) !important;
+
+    transform: translateY(-1px);
+}
+
+.btn-success {
+
+    background: var(--clinic-green) !important;
+
+    border-color: var(--clinic-green) !important;
+
+    color: #FFFFFF !important;
+}
+
+.btn-success:hover {
+
+    background: var(--clinic-green-dark) !important;
+
+    border-color: var(--clinic-green-dark) !important;
+}
+
+.btn-outline-primary {
+
+    color: var(--clinic-primary) !important;
+
+    border-color: var(--clinic-primary) !important;
+
+    background: #FFFFFF;
+}
+
+.btn-outline-primary:hover {
+
+    color: #FFFFFF !important;
+
+    background: var(--clinic-primary) !important;
+}
+
+.btn-outline-dark {
+
+    color: var(--clinic-primary) !important;
+
+    border-color: var(--clinic-primary) !important;
+}
+
+.btn-outline-dark:hover {
+
+    background: var(--clinic-primary) !important;
+
+    border-color: var(--clinic-primary) !important;
+
+    color: #FFFFFF !important;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero-section {
+
+    padding: 5rem 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #176FC2 0%,
+            #1976D2 50%,
+            #208C91 100%
+        );
+
+    color: #FFFFFF;
+}
+
+.clinic-badge {
+
+    display: inline-block;
+
+    padding: .4rem .85rem;
+
+    border: 1px solid rgba(255,255,255,.25);
+
+    border-radius: 50px;
+
+    background: rgba(255,255,255,.1);
+
+    color: #FFFFFF;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+
+    letter-spacing: .08em;
+}
+
+.hero-title {
+
+    max-width: 650px;
+
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+
+    font-weight: 700;
+
+    line-height: 1.1;
+
+    letter-spacing: -.03em;
+}
+
+.hero-title span {
+
+    color: #B8F2DD;
+}
+
+.hero-description {
+
+    max-width: 570px;
+
+    color: rgb(255, 255, 255);
+
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   HERO BOTONES
+========================================================= */
+
+.clinic-main-btn {
+
+    padding: .75rem 1.3rem;
+
+    color: var(--clinic-primary) !important;
+
+    border: none;
+}
+
+.clinic-main-btn:hover {
+
+    background: #F1FFFA !important;
+
+    transform: translateY(-1px);
+}
+
+.clinic-secondary-btn {
+
+    padding: .75rem 1.3rem;
+
+    border-color: rgba(255,255,255,.7);
+
+    color: #FFFFFF;
+}
+
+.clinic-secondary-btn:hover {
+
+    color: var(--clinic-primary);
+
+    background: #FFFFFF;
+
+    border-color: #FFFFFF;
+}
+
+
+/* =========================================================
+   MÉTRICAS
+========================================================= */
+
+.metric-card {
+
+    min-height: 92px;
+
+    padding: 1rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    background: rgba(255,255,255,.10);
+}
+
+.metric-card strong {
+
+    color: #FFFFFF;
+
+    font-size: 1.2rem;
+
+    font-weight: 700;
+}
+
+.metric-card span {
+
+    color: rgba(255,255,255,.75);
+
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   PANEL DEL HERO
+========================================================= */
+
+.hero-panel {
+
+    background: #FFFFFF;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,.18);
+}
+
+.hero-panel-top {
+
+    min-height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: .65rem 1rem;
+
+    background: #F1F4F7;
+
+    border-bottom: 1px solid var(--clinic-border);
+}
+
+.hero-panel-top > span {
+
+    width: 9px;
+
+    height: 9px;
+
+    display: block;
+
+    border-radius: 50%;
+
+    background: #BCC8D2;
+}
+
+.hero-panel-top > span:nth-child(1) {
+    background: #D95C5C;
+}
+
+.hero-panel-top > span:nth-child(2) {
+    background: #D6AA48;
+}
+
+.hero-panel-top > span:nth-child(3) {
+    background: #42A875;
+}
+
+.panel-status {
+
+    color: var(--clinic-green-dark);
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+.hero-panel-body {
+
+    display: flex;
+
+    gap: 1.5rem;
+
+    padding: 1.6rem;
+
+    flex-wrap: wrap;
+
+    color: var(--clinic-ink);
+}
+
+.appointment-preview {
+
+    flex: 1;
+
+    min-width: 200px;
+}
+
+.appointment-preview h2 {
+
+    font-size: 1.15rem;
+
+    font-weight: 700;
+
+    color: var(--clinic-ink);
+}
+
+.preview-tag {
+
+    display: inline-block;
+
+    color: var(--clinic-primary);
+
+    font-size: .68rem;
+
+    font-weight: 700;
+
+    letter-spacing: .1em;
+}
+
+.preview-list {
+
+    list-style: none;
+
+    margin: 1.2rem 0 0;
+
+    padding: 0;
+}
+
+.preview-list li {
+
+    position: relative;
+
+    padding: .35rem 0 .35rem 1.3rem;
+
+    color: var(--clinic-text);
+
+    font-size: .85rem;
+}
+
+.preview-list li::before {
+
+    content: "✓";
+
+    position: absolute;
+
+    left: 0;
+
+    color: var(--clinic-green);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TARJETA DE CITA
+========================================================= */
+
+.preview-card {
+
+    flex: 1;
+
+    min-width: 190px;
+
+    padding: 1.2rem;
+
+    border-radius: 12px;
+
+    background: var(--clinic-bg);
+
+    border: 1px solid var(--clinic-border);
+}
+
+.preview-card h3 {
+
+    font-size: .98rem;
+
+    font-weight: 700;
+
+    color: var(--clinic-ink);
+}
+
+.preview-card p {
+
+    color: var(--clinic-text);
+
+    font-size: .82rem;
+}
+
+.appointment-status {
+
+    display: inline-block;
+
+    margin-top: .5rem;
+
+    padding: .3rem .65rem;
+
+    border-radius: 50px;
+
+    background: var(--clinic-green-light);
+
+    color: var(--clinic-green-dark);
+
+    font-size: .7rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+.services-section {
+
+    padding: 5rem 0;
+
+    background: #FFFFFF;
+}
+
+.information-section {
+
+    padding: 5rem 0;
+
+    background: var(--clinic-bg);
+}
+
+.section-heading {
+
+    max-width: 750px;
+
+    margin: 0 auto;
+}
+
+.section-eyebrow {
+
+    font-size: .7rem;
+
+    font-weight: 700;
+
+    letter-spacing: .15em;
+
+    color: var(--clinic-primary);
+}
+
+.section-title {
+
+    color: var(--clinic-ink);
+
+    font-size: 1.9rem;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+.section-copy {
+
+    max-width: 650px;
+
+    color: var(--clinic-muted);
+
+    font-size: .95rem;
+}
+
+
+/* =========================================================
+   TARJETAS DE SERVICIOS
+========================================================= */
+
+.service-card {
+
+    padding: 1.7rem;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--clinic-border);
+
+    border-radius: 14px;
+
+    box-shadow: var(--clinic-shadow-sm);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.service-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: var(--clinic-shadow-md);
+}
+
+.service-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 1rem;
+
+    border-radius: 10px;
+
+    background: var(--clinic-blue-light);
+
+    color: var(--clinic-primary);
+
+    font-size: .8rem;
+
+    font-weight: 700;
+}
+
+.service-icon-green {
+
+    background: var(--clinic-green-light);
+
+    color: var(--clinic-green-dark);
+}
+
+.service-card h3 {
+
+    color: var(--clinic-ink);
+
+    font-size: 1.05rem;
+
+    font-weight: 700;
+}
+
+.service-card p {
+
+    margin-top: .6rem;
+
+    color: var(--clinic-muted);
+
+    font-size: .88rem;
+}
+
+.service-link {
+
+    display: inline-block;
+
+    margin-top: .6rem;
+
+    color: var(--clinic-primary);
+
+    font-size: .85rem;
+
+    font-weight: 600;
+}
+
+.service-link:hover {
+
+    text-decoration: underline;
+}
+
+.service-link-green {
+
+    color: var(--clinic-green-dark);
+}
+
+
+/* =========================================================
+   LISTA DE INFORMACIÓN
+========================================================= */
+
+.info-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+}
+
+.info-item {
+
+    display: flex;
+
+    gap: 1rem;
+
+    padding: 1.15rem;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--clinic-border);
+
+    border-radius: 12px;
+}
+
+.info-check {
+
+    flex-shrink: 0;
+
+    width: 34px;
+
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--clinic-green-light);
+
+    color: var(--clinic-green-dark);
+
+    font-weight: 700;
+}
+
+.info-item strong {
+
+    display: block;
+
+    margin-bottom: .25rem;
+
+    color: var(--clinic-ink);
+
+    font-size: .93rem;
+}
+
+.info-item p {
+
+    margin: 0;
+
+    color: var(--clinic-muted);
+
+    font-size: .82rem;
+}
+
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+.form-control,
+.form-select {
+
+    min-height: 44px;
+
+    border: 1px solid var(--clinic-border);
+
+    border-radius: 8px;
+
+    color: var(--clinic-ink);
+
+    background: #FFFFFF;
+}
+
+.form-control::placeholder {
+
+    color: #A0ADBA;
+}
+
+.form-control:focus,
+.form-select:focus {
+
+    border-color: var(--clinic-primary);
+
+    box-shadow: 0 0 0 3px rgba(25,118,210,.10);
+}
+
+.form-label {
+
+    margin-bottom: .4rem;
+
+    color: var(--clinic-ink);
+
+    font-size: .86rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   CAJA DE INFORMACIÓN / VALIDACIONES
+========================================================= */
+
+.info-box,
+.cobertura-box {
+
+    padding: 1.25rem 1.4rem;
+
+    background: var(--clinic-blue-light);
+
+    border: 1px solid #CFE3F7;
+
+    border-radius: 12px;
+}
+
+.info-box strong,
+.cobertura-box strong {
+
+    color: var(--clinic-ink);
+
+    font-weight: 700;
+}
+
+.info-box ul,
+.cobertura-box ul {
+
+    padding-left: 0;
+
+    margin-bottom: 0;
+
+    list-style: none;
+}
+
+.info-box li,
+.cobertura-box li {
+
+    position: relative;
+
+    padding-left: 1.4rem;
+
+    margin-top: .5rem;
+
+    color: var(--clinic-text);
+
+    font-size: .86rem;
+}
+
+.info-box li::before,
+.cobertura-box li::before {
+
+    content: "✓";
+
+    position: absolute;
+
+    left: 0;
+
+    color: var(--clinic-green);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ACCESS CARD
+========================================================= */
+
+.access-card {
+
+    background: rgba(255, 255, 255, .96);
+
+    border: 1px solid var(--clinic-border);
+
+    border-radius: 16px;
+
+    box-shadow: var(--clinic-shadow-md);
+
+    overflow: hidden;
+}
+
+.access-section {
+    min-height: 680px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--clinic-bg) 0%, var(--clinic-blue-light) 100%);
+}
+
+.access-section > .container {
+    max-width: 1320px;
+}
+
+.access-layout {
+    width: 100%;
+}
+
+.access-intro {
+    padding-top: .75rem;
+    padding-right: 2rem;
+}
+
+.access-info-box {
+    box-shadow: var(--clinic-shadow-sm);
+}
+
+.access-info-box.account-box {
+    background: rgba(255, 255, 255, .78);
+    border-color: var(--clinic-border);
+}
+
+.access-intro .section-title {
+    max-width: 430px;
+    margin-bottom: 1rem;
+}
+
+.access-intro > p.text-secondary {
+    max-width: 520px;
+    font-size: 1rem;
+}
+
+.access-info-box {
+    width: 100%;
+}
+
+.access-form-column {
+    display: flex;
+    padding-left: 2rem;
+}
+
+.access-card .card-body {
+    width: 100%;
+    padding: clamp(1.25rem, 3vw, 2.5rem) !important;
+}
+
+.access-card-heading {
+    padding-bottom: 1.35rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--clinic-border);
+}
+
+.access-card-heading h3 {
+    color: var(--clinic-ink);
+    font-size: 1.45rem;
+    font-weight: 700;
+}
+
+.access-card-heading p.text-secondary {
+    max-width: 430px;
+    font-size: .9rem;
+}
+
+.access-card .form-control {
+    min-height: 46px;
+}
+
+.access-card .form-label {
+    margin-bottom: .45rem;
+    color: var(--clinic-ink);
+    font-weight: 600;
+}
+
+.login-actions {
+    width: 100%;
+}
+
+.login-actions .btn {
+    min-width: 132px;
+}
+
+@media (max-width: 991.98px) {
+    .access-section {
+        min-height: auto;
+    }
+
+    .access-intro {
+        padding-top: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .access-intro {
+        border-right: 1px solid var(--clinic-border);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .access-intro {
+        padding-right: .75rem;
+    }
+
+    .access-form-column {
+        padding-left: .75rem;
+    }
+
+    .login-actions .btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   TABS REGISTRO / LOGIN
+========================================================= */
+
+#accessTabs {
+
+    margin-bottom: 1.5rem !important;
+
+    padding: .35rem;
+
+    background: var(--clinic-bg);
+
+    border-radius: 10px;
+
+    gap: .35rem;
+}
+
+#accessTabs .nav-item {
+
+    flex: 1;
+}
+
+#accessTabs .nav-link {
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: .6rem 1rem;
+
+    color: var(--clinic-muted);
+
+    background: transparent;
+
+    font-size: .88rem;
+
+    font-weight: 600;
+}
+
+#accessTabs .nav-link.active {
+
+    background: var(--clinic-primary) !important;
+
+    color: #FFFFFF !important;
+
+    box-shadow: 0 4px 12px rgba(25,118,210,.18);
+}
+
+#accessTabs .nav-link:not(.active):hover {
+
+    background: #FFFFFF;
+
+    color: var(--clinic-primary);
+}
+
+
+/* =========================================================
+   ALERTAS
+========================================================= */
+
+.alert {
+
+    border-radius: 9px;
+
+    border-width: 1px;
+
+    font-size: .85rem;
+}
+
+.alert-success {
+
+    color: #176548;
+
+    background: var(--clinic-green-light);
+
+    border-color: #C9EADD;
+
+    border-left: 4px solid var(--clinic-green);
+}
+
+.alert-danger {
+
+    border-left: 4px solid #DC3545;
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge-pendiente {
+
+    display: inline-block;
+
+    padding: .3rem .7rem;
+
+    border-radius: 50px;
+
+    background: var(--clinic-blue-light);
+
+    color: var(--clinic-primary);
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+.badge-atendido {
+
+    display: inline-block;
+
+    padding: .3rem .7rem;
+
+    border-radius: 50px;
+
+    background: var(--clinic-green-light);
+
+    color: var(--clinic-green-dark);
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+.badge-cancelado {
+
+    display: inline-block;
+
+    padding: .3rem .7rem;
+
+    border-radius: 50px;
+
+    background: rgba(220,53,69,.08);
+
+    color: #C92C3A;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   AGENDA
+========================================================= */
+
+.agenda-item {
+
+    padding: 1.25rem 1.4rem;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--clinic-border);
+
+    border-radius: 12px;
+
+    transition: box-shadow .2s ease;
+}
+
+.agenda-item:hover {
+
+    box-shadow: var(--clinic-shadow-sm);
+}
+
+.agenda-item .patient-name {
+
+    color: var(--clinic-ink);
+
+    font-weight: 600;
+}
+
+.agenda-item .appt-meta {
+
+    color: var(--clinic-muted);
+
+    font-size: .84rem;
+}
+
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+.table {
+
+    background: #FFFFFF;
+
+    border-color: var(--clinic-border);
+}
+
+.table thead th {
+
+    padding: .85rem;
+
+    background: var(--clinic-primary);
+
+    color: #FFFFFF;
+
+    border: none;
+
+    font-size: .84rem;
+
+    font-weight: 600;
+}
+
+.table tbody td {
+
+    padding: .8rem;
+
+    color: var(--clinic-text);
+
+    font-size: .85rem;
+
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+
+    background: #F7FBFE;
+}
+
+.table-row-odd {
+
+    background: #FAFCFE;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-content {
+
+    border: none;
+
+    border-radius: 14px;
+
+    box-shadow: var(--clinic-shadow-md);
+
+    overflow: hidden;
+}
+
+.modal-header {
+
+    background: var(--clinic-primary);
+
+    color: #FFFFFF;
+
+    border: none;
+}
+
+.modal-header .btn-close {
+
+    filter: brightness(0) invert(1);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.clinic-footer {
+
+    padding: 2rem 0;
+
+    background: #16324D;
+
+    color: rgba(255,255,255,.82);
+
+    font-size: .83rem;
+}
+
+.footer-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: .4rem;
+
+    color: #FFFFFF;
+
+    font-size: 1rem;
+
+    font-weight: 700;
+}
+
+.footer-icon {
+
+    width: 28px;
+
+    height: 28px;
+
+    background: var(--clinic-green);
+}
+
+.footer-description {
+
+    color: rgba(255,255,255,.6);
+
+    font-size: .8rem;
+}
+
+.clinic-footer small {
+
+    color: rgba(255,255,255,.55);
+}
+
+
+/* =========================================================
+   ACCESO
+========================================================= */
+
+.section-soft {
+
+    background: var(--clinic-bg);
+}
+
+#registerForm .btn-primary,
+#loginForm .btn-primary {
+
+    min-height: 44px;
+
+    padding-left: 1.25rem;
+
+    padding-right: 1.25rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .clinic-navbar .nav-link.active::after {
+
+        display: none;
+    }
+
+    .clinic-navbar .navbar-nav {
+
+        align-items: stretch;
+
+        padding-top: .8rem;
+
+        padding-bottom: .8rem;
+    }
+
+    .clinic-btn-nav {
+
+        margin-top: .5rem;
+
+        text-align: center;
+    }
+
+    .hero-section {
+
+        padding: 4rem 0;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .hero-section {
+
+        padding: 3.5rem 0;
+    }
+
+    .hero-title {
+
+        font-size: 2.2rem;
+    }
+
+    .services-section,
+    .information-section {
+
+        padding: 3.5rem 0;
+    }
+
+    .section-title {
+
+        font-size: 1.6rem;
+    }
+
+    .hero-panel-body {
+
+        flex-direction: column;
+    }
+
+    .metric-card {
+
+        min-height: 78px;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+
+    .clinic-brand {
+
+        font-size: 1.1rem;
+    }
+
+    .hero-title {
+
+        font-size: 2rem;
+    }
+
+    .hero-description {
+
+        font-size: .92rem;
+    }
+
+    .clinic-main-btn,
+    .clinic-secondary-btn {
+
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .service-card {
+
+        padding: 1.35rem;
+    }
+}
+
+
+.validacion-error {
+    color: #c62828;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.35rem;
+}
+
+.validacion-correcto {
+    color: #198754;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.35rem;
+}
+
+
+/* =========================================================
+   DASHBOARDS (general / paciente / médico)
+========================================================= */
+
+.stat-card {
+    padding: 1.25rem 1.4rem;
+    background: var(--clinic-surface);
+    border: 1px solid var(--clinic-border);
+    border-radius: 14px;
+    box-shadow: var(--clinic-shadow-sm);
+    height: 100%;
+}
+
+.stat-card .stat-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--clinic-blue-light);
+    color: var(--clinic-primary);
+    font-size: 1.1rem;
+    margin-bottom: .85rem;
+}
+
+.stat-card.stat-green .stat-icon {
+    background: var(--clinic-green-light);
+    color: var(--clinic-green-dark);
+}
+
+.stat-card.stat-amber .stat-icon {
+    background: #FFF3E0;
+    color: #B26A00;
+}
+
+.stat-card strong {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #4d8ecf;;
+    line-height: 1.1;
+}
+
+.stat-card span {
+    display: block;
+    margin-top: .3rem;
+    font-size: .82rem;
+    color: var(--clinic-muted);
+}
+
+.identity-picker {
+    background: var(--clinic-surface);
+    border: 1px solid var(--clinic-border);
+    border-radius: 14px;
+    box-shadow: var(--clinic-shadow-sm);
+    padding: 1.25rem 1.4rem;
+}
+
+.identity-picker .identity-name {
+    font-weight: 700;
+    color: var(--clinic-ink);
+    font-size: 1.05rem;
+}
+
+.identity-picker .identity-role {
+    color: var(--clinic-muted);
+    font-size: .82rem;
+}
+
+/* =========================================
+   MODO OSCURO - CLINIAGENDA (OPTIMIZADO)
+   ========================================= */
+
+/* 1. Fondo general y Navbar */
+[data-bs-theme="dark"] body {
+  background-color: #0d1117 !important; 
+  color: #e9ecef !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar {
+  background-color: #0d1117 !important;
+  border-bottom: 1px solid #30363d !important;
+}
+
+[data-bs-theme="dark"] footer {
+  background-color: #0d1117 !important;
+  border-bottom: none !important;
+  border-top: 1px solid #30363d !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .navbar-brand {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .nav-link {
+  color: #8b949e !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .nav-link:hover,
+[data-bs-theme="dark"] .clinic-navbar .nav-link.active {
+  color: #58a6ff !important;
+}
+
+/* 2. Fondos de sección degradados (Hero y Acceso) */
+[data-bs-theme="dark"] .section-soft {
+  background: linear-gradient(135deg, #051b29 0%, #0a2e3f 100%) !important;
+}
+
+[data-bs-theme="dark"] .bg-primary,
+[data-bs-theme="dark"] header,
+[data-bs-theme="dark"] .hero-section {
+  background: linear-gradient(135deg, #051829 0%, #0a3a52 100%) !important;
+}
+
+/* Ajustes de texto en el Hero */
+[data-bs-theme="dark"] .hero-section .lead {
+  color: #c9d1d9 !important;
+}
+
+[data-bs-theme="dark"] .hero-section .btn-outline-dark {
+  color: #c9d1d9 !important;
+  border-color: #8b949e !important;
+}
+
+[data-bs-theme="dark"] .hero-section .btn-outline-dark:hover {
+  background-color: #30363d !important;
+  color: #ffffff !important;
+}
+
+/* 3. Tarjetas, Contenedores y Cajas de Info */
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .access-card,
+[data-bs-theme="dark"] .info-box,
+[data-bs-theme="dark"] .stat-card,
+[data-bs-theme="dark"] .agenda-item,
+[data-bs-theme="dark"] .hero-panel {
+  background-color: #161b22 !important; 
+  border: 1px solid #30363d !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+}
+
+[data-bs-theme="dark"] .info-box {
+  color: #8b949e !important;
+}
+
+[data-bs-theme="dark"] .info-box strong,
+[data-bs-theme="dark"] .access-card-heading h3,
+[data-bs-theme="dark"] .access-card .form-label {
+    color: #f0f6fc !important;
+}
+
+[data-bs-theme="dark"] .info-box li {
+    color: #c9d1d9 !important;
+}
+
+[data-bs-theme="dark"] .access-card-heading {
+    border-color: #30363d !important;
+}
+
+[data-bs-theme="dark"] .access-card-heading p.text-secondary,
+[data-bs-theme="dark"] .access-intro > p.text-secondary {
+    color: #b6c2cf !important;
+}
+
+[data-bs-theme="dark"] .access-info-box.account-box {
+    background: #1c2128 !important;
+    border-color: #30363d !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .session-role {
+    background: #123d31;
+    color: #75d6ad;
+}
+
+/* 4. Títulos y Textos Secundarios Generales */
+[data-bs-theme="dark"] .section-title,
+[data-bs-theme="dark"] h2,
+[data-bs-theme="dark"] h3,
+[data-bs-theme="dark"] h4,
+[data-bs-theme="dark"] .card-title {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .text-secondary,
+[data-bs-theme="dark"] .section-eyebrow,
+[data-bs-theme="dark"] .card p,
+[data-bs-theme="dark"] .card .text-muted {
+  color: #8b949e !important;
+}
+
+/* 5. Inputs de Formularios (Correo, Contraseña) */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+  background-color: #0d1117 !important; 
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 0.25rem rgba(88, 166, 255, 0.25) !important;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+  color: #6e7681 !important;
+}
+
+[data-bs-theme="dark"] .form-label {
+  color: #c9d1d9 !important;
+}
+
+/* 6. Pestañas (Tabs) de Registro / Login */
+[data-bs-theme="dark"] .access-card .nav-pills {
+  background-color: #0d1117 !important; 
+  border: 1px solid #30363d !important;
+}
+
+[data-bs-theme="dark"] .access-card .nav-link:not(.active) {
+  color: #8b949e !important;
+  background-color: transparent !important; 
+}
+
+[data-bs-theme="dark"] .access-card .nav-link:not(.active):hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 7. Alertas de Validación */
+[data-bs-theme="dark"] .alert-success {
+  background-color: #0f5132 !important; 
+  color: #75b798 !important;
+  border-color: #146c43 !important;
+}
+
+[data-bs-theme="dark"] .alert-danger {
+  background-color: #440b12 !important; 
+  color: #ea868f !important;
+  border-color: #b02a37 !important;
+}
+
+/* 8. Componentes específicos del Hero (Métricas, Iconos y Mockup) */
+[data-bs-theme="dark"] .metric-card {
+  background-color: rgba(22, 27, 34, 0.7) !important;
+  border: 1px solid #30363d !important;
+}
+
+/* Enlaces de navegación sin botones rellenos, con subrayado animado. */
+.clinic-navbar .nav-link,
+.clinic-navbar .navbar-nav a.btn-primary {
+  position: relative;
+  padding: .55rem .8rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: var(--clinic-text) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: .93rem;
+  font-weight: 500;
+  transition: color .25s ease;
+}
+
+.clinic-navbar .nav-link::after,
+.clinic-navbar .navbar-nav a.btn-primary::after {
+  content: "";
+  position: absolute;
+  right: .8rem;
+  bottom: .1rem;
+  left: .8rem;
+  height: 2px;
+  border-radius: 10px;
+  background: var(--clinic-primary);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .25s ease;
+}
+
+.clinic-navbar .nav-link:hover::after,
+.clinic-navbar .nav-link:focus-visible::after,
+.clinic-navbar .navbar-nav a.btn-primary:hover::after,
+.clinic-navbar .navbar-nav a.btn-primary:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.clinic-navbar .nav-link.active {
+  color: var(--clinic-text) !important;
+  font-weight: 500;
+}
+
+.clinic-navbar .navbar-nav a.btn-primary:hover,
+.clinic-navbar .navbar-nav a.btn-primary:focus-visible {
+  color: var(--clinic-text) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.clinic-navbar .navbar-collapse {
+  flex-grow: 1;
+}
+
+.clinic-navbar .navbar-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.clinic-navbar .session-nav-item {
+  order: 998;
+  flex: 0 0 auto;
+}
+
+.clinic-navbar .theme-nav-item {
+  order: 999;
+  flex: 0 0 auto;
+  margin-left: .35rem !important;
+}
+
+.clinic-navbar #btn-theme-toggle {
+  display: inline-flex;
+  width: 2.5rem;
+  min-width: 0;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--clinic-border);
+  border-radius: 50%;
+  color: var(--clinic-ink);
+  background: transparent;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.clinic-navbar #btn-theme-toggle:hover,
+.clinic-navbar #btn-theme-toggle:focus-visible {
+  color: var(--clinic-primary-dark);
+  background: var(--clinic-blue-light);
+  border-color: var(--clinic-primary);
+  transform: rotate(12deg);
+}
+
+[data-bs-theme="dark"] .clinic-navbar .nav-link:hover,
+[data-bs-theme="dark"] .clinic-navbar .nav-link.active,
+[data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary {
+  color: #c9d1d9 !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar #btn-theme-toggle {
+  color: #f8fafc;
+  border-color: #526579;
+}
+
+@media (max-width: 991.98px) {
+  .clinic-navbar .navbar-nav {
+    align-items: stretch;
+    gap: .25rem !important;
+  }
+
+  .clinic-navbar .theme-nav-item {
+    display: flex;
+    justify-content: flex-end;
+    margin: .35rem 0 0 !important;
+  }
+
+  .clinic-navbar #btn-theme-toggle {
+    width: 2.5rem;
+    justify-content: center;
+  }
+
+  .clinic-navbar .nav-link,
+  .clinic-navbar .navbar-nav a.btn-primary {
+    width: 100%;
+    padding: .8rem 1rem !important;
+    text-align: left;
+  }
+
+  .clinic-navbar .nav-link::after,
+  .clinic-navbar .navbar-nav a.btn-primary::after {
+    right: 1rem;
+    left: 1rem;
+    bottom: .35rem;
+  }
+
+  .clinic-navbar .nav-link.active::after {
+    display: block;
+  }
+
+  .clinic-navbar .nav-link.active {
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  .clinic-navbar .navbar-nav a.btn-primary:hover,
+  .clinic-navbar .navbar-nav a.btn-primary:focus-visible {
+    background: transparent !important;
+  }
+}
+
+[data-bs-theme="dark"] .metric-card strong {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .metric-card span {
+  color: #8b949e !important;
+}
+
+[data-bs-theme="dark"] .icon-box,
+[data-bs-theme="dark"] .badge-light {
+  background-color: #0d1117 !important;
+  color: #58a6ff !important;
+  border: 1px solid #30363d !important;
+}
+
+/* Barra superior del panel (botones rojo, amarillo, verde) */
+[data-bs-theme="dark"] .hero-panel-top {
+  background-color: #0d1117 !important;
+  border-bottom: 1px solid #30363d !important;
+}
+
+/* Textos dentro de la lista del panel mockup */
+[data-bs-theme="dark"] .appointment-preview h2 {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .appointment-preview li {
+  color: #8b949e !important;
+}
+
+/* Tarjeta interna "Próxima cita" (preview-card) */
+[data-bs-theme="dark"] .preview-card {
+  background-color: #0d1117 !important;
+  border: 1px solid #30363d !important;
+}
+
+[data-bs-theme="dark"] .preview-card h3 {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .preview-card .text-secondary {
+  color: #8b949e !important;
+}
+
+/* Navegación: contraste claro y menú móvil organizado. */
+.clinic-navbar {
+  background: #ffffff !important;
+}
+
+.clinic-navbar .navbar-brand {
+  color: #17324d !important;
+  font-weight: 700;
+}
+
+.clinic-navbar .nav-link,
+.clinic-navbar .navbar-nav a.btn-primary {
+  color: #17324d !important;
+  font-weight: 600;
+}
+
+.clinic-navbar .nav-link:hover,
+.clinic-navbar .nav-link:focus-visible,
+.clinic-navbar .nav-link.active,
+.clinic-navbar .navbar-nav a.btn-primary:hover,
+.clinic-navbar .navbar-nav a.btn-primary:focus-visible {
+  color: #075eaa !important;
+}
+
+.clinic-navbar .navbar-toggler {
+  border: 1px solid #c8d8e8;
+  border-radius: 12px;
+  padding: .45rem .6rem;
+  background: #f3f8fd;
+}
+
+.clinic-navbar .navbar-toggler:focus {
+  box-shadow: 0 0 0 .2rem rgba(25, 118, 210, .2);
+}
+
+.clinic-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%2317324d' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.clinic-navbar .session-nav-item {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+
+.clinic-navbar .session-logout {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  padding: .3rem .65rem;
+  border: 1px solid #f0caca;
+  border-radius: 999px;
+  background: #fff7f7;
+  color: #a8323e;
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.clinic-navbar .session-logout:hover,
+.clinic-navbar .session-logout:focus-visible {
+  border-color: #d65b66;
+  background: #ffeded;
+  color: #842029;
+  transform: translateY(-1px);
+}
+
+.clinic-navbar .session-logout-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+[data-bs-theme="dark"] .clinic-navbar {
+  background: #10283d !important;
+  border-bottom-color: #29455c !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .navbar-brand {
+  color: #f4f8fc !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .nav-link,
+[data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary {
+  color: #e6f0f8 !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .nav-link:hover,
+[data-bs-theme="dark"] .clinic-navbar .nav-link:focus-visible,
+[data-bs-theme="dark"] .clinic-navbar .nav-link.active,
+[data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary:hover,
+[data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary:focus-visible {
+  color: #9bd0ff !important;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .navbar-toggler {
+  border-color: #49657b;
+  background: #1b3a53;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23e6f0f8' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+[data-bs-theme="dark"] .clinic-navbar .session-logout {
+  border-color: #74414a;
+  background: #3b242c;
+  color: #ffb8bd;
+}
+
+[data-bs-theme="dark"] .clinic-navbar .session-logout:hover,
+[data-bs-theme="dark"] .clinic-navbar .session-logout:focus-visible {
+  border-color: #b94b58;
+  background: #512a32;
+  color: #ffe4e6;
+}
+
+@media (max-width: 991.98px) {
+  .clinic-navbar .navbar-collapse {
+    top: 72px;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: min(88vw, 360px);
+    height: calc(100vh - 72px);
+    height: calc(100dvh - 72px);
+    padding: 1rem;
+    overflow-y: auto;
+    background: #f8fbff !important;
+    border-left: 1px solid #d7e4f0;
+    border-top-left-radius: 18px;
+    box-shadow: -12px 12px 32px rgba(23, 50, 77, .15);
+    opacity: 0;
+    transform: translateX(28px);
+    transition:
+      opacity .24s ease,
+      transform .32s cubic-bezier(.2, .75, .25, 1),
+      visibility .32s ease,
+      box-shadow .32s ease;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .clinic-navbar .navbar-collapse.collapse:not(.show) {
+    display: block;
+  }
+
+  .clinic-navbar .navbar-collapse.show {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    box-shadow:
+      0 0 0 100vmax rgba(16, 40, 61, .14),
+      -12px 12px 32px rgba(23, 50, 77, .15);
+  }
+
+  .clinic-navbar .navbar-collapse.collapsing {
+    display: block;
+    height: calc(100vh - 72px) !important;
+    height: calc(100dvh - 72px) !important;
+    opacity: 0;
+    transform: translateX(28px);
+    visibility: visible;
+    transition:
+      height .32s ease,
+      opacity .24s ease,
+      transform .32s cubic-bezier(.2, .75, .25, 1),
+      visibility .32s ease;
+  }
+
+  .clinic-navbar .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: .35rem !important;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .clinic-navbar .navbar-nav > .nav-item:not(.session-nav-item):not(.theme-nav-item) {
+    width: 100%;
+  }
+
+  .clinic-navbar .nav-link,
+  .clinic-navbar .navbar-nav a.btn-primary {
+    display: flex;
+    width: 100%;
+    min-height: 46px;
+    align-items: center;
+    justify-content: flex-start;
+    padding: .7rem .9rem !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    color: #18354d !important;
+    background: transparent !important;
+    font-size: .98rem;
+    font-weight: 600;
+    text-align: left;
+    transition:
+      color .2s ease,
+      background-color .2s ease,
+      transform .2s ease,
+      box-shadow .2s ease;
+  }
+
+  .clinic-navbar .nav-link::after,
+  .clinic-navbar .navbar-nav a.btn-primary::after {
+    display: none;
+  }
+
+  .clinic-navbar .nav-link.active::after {
+    display: none !important;
+  }
+
+  .clinic-navbar .nav-link:hover,
+  .clinic-navbar .nav-link:focus-visible,
+  .clinic-navbar .navbar-nav a.btn-primary:hover,
+  .clinic-navbar .navbar-nav a.btn-primary:focus-visible {
+    color: #075eaa !important;
+    background: #e8f3ff !important;
+    transform: translateX(4px);
+  }
+
+  .clinic-navbar .nav-link.active {
+    color: #075eaa !important;
+    background: #e3f0ff !important;
+    box-shadow: inset 3px 0 #1976d2;
+    font-weight: 700;
+  }
+
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item {
+    animation: clinic-nav-item-enter .36s both;
+  }
+
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(1) { animation-delay: .04s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(2) { animation-delay: .07s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(3) { animation-delay: .10s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(4) { animation-delay: .13s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(5) { animation-delay: .16s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(6) { animation-delay: .19s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(7) { animation-delay: .22s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(8) { animation-delay: .25s; }
+  .clinic-navbar .navbar-collapse.show .navbar-nav > .nav-item:nth-child(9) { animation-delay: .28s; }
+
+  .clinic-navbar .session-nav-item {
+    align-self: stretch;
+    justify-content: space-between;
+    width: 100%;
+    margin: .5rem 0 0 !important;
+    padding: .8rem .2rem .2rem;
+    border-top: 1px solid #d7e4f0;
+  }
+
+  .clinic-navbar .session-role {
+    min-height: 2rem;
+    padding: .35rem .75rem;
+    background: #e4f6ef;
+    color: #116247;
+    font-size: .78rem;
+  }
+
+  .clinic-navbar .session-logout {
+    min-height: 2.35rem;
+    padding: .45rem .8rem;
+    font-size: .82rem;
+  }
+
+  .clinic-navbar .theme-nav-item {
+    display: flex;
+    align-self: stretch;
+    justify-content: flex-start;
+    margin: auto 0 0 !important;
+    padding-top: .75rem;
+    border-top: 1px solid #d7e4f0;
+  }
+
+  .clinic-navbar #btn-theme-toggle {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    border-color: #c8d8e8;
+    background: #ffffff;
+  }
+
+  .clinic-navbar #btn-theme-toggle:hover,
+  .clinic-navbar #btn-theme-toggle:focus-visible {
+    transform: translateY(-2px) rotate(8deg);
+    box-shadow: 0 5px 14px rgba(25, 118, 210, .18);
+  }
+
+  .clinic-navbar .navbar-toggler {
+    transition:
+      background-color .2s ease,
+      border-color .2s ease,
+      box-shadow .2s ease,
+      transform .2s ease;
+  }
+
+  .clinic-navbar .navbar-toggler:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(25, 118, 210, .14);
+  }
+
+  .clinic-navbar .navbar-toggler-icon {
+    position: relative;
+    width: 1.5rem;
+    height: 1.25rem;
+    background-color: transparent;
+    background-image: linear-gradient(#17324d, #17324d) !important;
+    background-size: 100% 2px;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-size .2s ease;
+  }
+
+  .clinic-navbar .navbar-toggler-icon::before,
+  .clinic-navbar .navbar-toggler-icon::after {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: #17324d;
+    content: "";
+    transition: top .22s ease, transform .22s ease;
+  }
+
+  .clinic-navbar .navbar-toggler-icon::before { top: 2px; }
+  .clinic-navbar .navbar-toggler-icon::after { top: calc(100% - 4px); }
+
+  .clinic-navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    background-size: 0 2px;
+  }
+
+  .clinic-navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::before {
+    top: calc(50% - 1px);
+    transform: rotate(45deg);
+  }
+
+  .clinic-navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::after {
+    top: calc(50% - 1px);
+    transform: rotate(-45deg);
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .navbar-collapse {
+    background: #10283d !important;
+    border-left-color: #29455c;
+    box-shadow: -12px 12px 32px rgba(0, 0, 0, .35);
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .navbar-collapse.show {
+    box-shadow:
+      0 0 0 100vmax rgba(0, 0, 0, .34),
+      -12px 12px 32px rgba(0, 0, 0, .35);
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .nav-link,
+  [data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary {
+    color: #e6f0f8 !important;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .nav-link:hover,
+  [data-bs-theme="dark"] .clinic-navbar .nav-link:focus-visible,
+  [data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary:hover,
+  [data-bs-theme="dark"] .clinic-navbar .navbar-nav a.btn-primary:focus-visible {
+    color: #b9ddff !important;
+    background: #1b3a53 !important;
+    transform: translateX(4px);
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .nav-link.active {
+    color: #c5e4ff !important;
+    background: #1b3a53 !important;
+    box-shadow: inset 3px 0 #65b5ff;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .session-nav-item,
+  [data-bs-theme="dark"] .clinic-navbar .theme-nav-item {
+    border-top-color: #29455c;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .session-logout {
+    border-color: #74414a;
+    background: #3b242c;
+    color: #ffb8bd;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .session-role {
+    background: #123d31;
+    color: #a7f3d0;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar #btn-theme-toggle {
+    border-color: #49657b;
+    background: #1b3a53;
+    color: #f4f8fc;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .navbar-toggler-icon {
+    background-image: linear-gradient(#e6f0f8, #e6f0f8) !important;
+  }
+
+  [data-bs-theme="dark"] .clinic-navbar .navbar-toggler-icon::before,
+  [data-bs-theme="dark"] .clinic-navbar .navbar-toggler-icon::after {
+    background: #e6f0f8;
+  }
+}
+
+@keyframes clinic-nav-item-enter {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clinic-navbar .navbar-collapse,
+  .clinic-navbar .navbar-nav > .nav-item,
+  .clinic-navbar .nav-link,
+  .clinic-navbar .navbar-toggler,
+  .clinic-navbar .navbar-toggler-icon,
+  .clinic-navbar .navbar-toggler-icon::before,
+  .clinic-navbar .navbar-toggler-icon::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================
+   MODO OSCURO - AGENDA, DASHBOARDS Y MODALES
+   ========================================= */
+
+/* 1. Selector de Identidad (Vistas Paciente / Médico) */
+[data-bs-theme="dark"] .identity-picker {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+[data-bs-theme="dark"] .identity-role {
+  color: #8b949e !important;
+}
+[data-bs-theme="dark"] .identity-name {
+  color: #ffffff !important;
+}
+
+/* 2. Tarjetas de Estadísticas (Dashboards) */
+/* Los bordes de color mantienen su función pero con tonos oscurecidos */
+[data-bs-theme="dark"] .stat-card.stat-green {
+  border-left-color: #238636 !important; /* Verde oscuro estilo GitHub */
+}
+[data-bs-theme="dark"] .stat-card.stat-amber {
+  border-left-color: #d29922 !important; /* Ámbar oscuro */
+}
+
+/* 3. Tarjetas de Citas (Agenda Visual) */
+[data-bs-theme="dark"] .agenda-item {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+[data-bs-theme="dark"] .agenda-item .agenda-hour {
+  color: #58a6ff !important;
+  font-weight: 600;
+}
+[data-bs-theme="dark"] .agenda-item .fw-semibold {
+  color: #c9d1d9 !important; /* Nombre del paciente */
+}
+[data-bs-theme="dark"] .agenda-item .agenda-meta span {
+  background-color: #0d1117 !important;
+  border: 1px solid #30363d !important;
+  color: #8b949e !important;
+}
+
+/* 4. Modales (Detalles, Edición y Búsqueda) */
+[data-bs-theme="dark"] .modal-content {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+}
+[data-bs-theme="dark"] .modal-header,
+[data-bs-theme="dark"] .modal-footer {
+  border-color: #30363d !important;
+}
+[data-bs-theme="dark"] .modal-header.bg-dark {
+  background-color: #0d1117 !important; /* Sobrescribe el bg-dark de Bootstrap en Editar Cita */
+}
+[data-bs-theme="dark"] .modal-title {
+  color: #ffffff !important;
+}
+
+/* Invertir color de la 'X' para cerrar modales */
+[data-bs-theme="dark"] .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Textos dentro del modal de detalle de cita */
+[data-bs-theme="dark"] .modal-detail .modal-label {
+  color: #8b949e !important;
+}
+[data-bs-theme="dark"] .modal-detail p {
+  color: #c9d1d9 !important;
+}
+
+/* 5. Listas de Selección (Buscador de pacientes/médicos en modales) */
+[data-bs-theme="dark"] .list-group-item {
+  background-color: #0d1117 !important;
+  border-color: #30363d !important;
+  color: #c9d1d9 !important;
+}
+[data-bs-theme="dark"] .list-group-item:hover,
+[data-bs-theme="dark"] .list-group-item-action:hover {
+  background-color: #21262d !important;
+  color: #58a6ff !important;
+}
+[data-bs-theme="dark"] .list-group-item .text-secondary {
+  color: #8b949e !important;
+}
+
+/* 6. Textos de estado vacío (Ej: "No hay citas registradas") */
+[data-bs-theme="dark"] #agendaVacio p,
+[data-bs-theme="dark"] #misCitasVacio p,
+[data-bs-theme="dark"] #citasMedicoVacio p,
+[data-bs-theme="dark"] #sinPacientesAgenda,
+[data-bs-theme="dark"] #sinMiPaciente {
+  color: #8b949e !important;
+}
+
+/* =========================================================
+   BADGES DE SEXO (tabla de Pacientes)
+   BUG CORREGIDO: estas clases las genera pacientes.js pero
+   nunca tenían color/fondo propios. El .badge de Bootstrap
+   por defecto es texto blanco SIN fondo, así que en modo
+   claro (fondo blanco) el texto quedaba invisible.
+========================================================= */
+.badge-femenino {
+    background-color: var(--clinic-primary);
+    color: #FFFFFF !important;
+}
+
+.badge-masculino {
+    background-color: var(--clinic-green);
+    color: #FFFFFF !important;
+}
+
+[data-bs-theme="dark"] .badge-femenino {
+    background-color: #1f6feb !important;
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .badge-masculino {
+    background-color: #238636 !important;
+    color: #ffffff !important;
+}

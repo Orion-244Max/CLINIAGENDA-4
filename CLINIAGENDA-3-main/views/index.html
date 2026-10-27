@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CliniAgenda | Gestión de citas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="../assets/css/bootstrap_min.css" rel="stylesheet">
+  <!-- Thymeleaf: ruta estática correcta para Spring Boot -->
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-light navbar-expand-lg sticky-top clinic-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">CliniAgenda</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+        
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item">  <a class="nav-link" href="pacientes.html">Pacientes</a></li>
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link" href="agenda.html">Agenda</a></li>	         
+          
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link" href="paciente-form.html">+ Nuevo paciente</a></li>
+          
+          <li th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''USER'')')}" class="nav-item"><a class="btn btn-primary ms-lg-2" href="regiscita.html">Reservar cita</a></li>
+          <li class="nav-item"><a class="nav-link" href="agenda-medico.html">Agenda Médico</a></li>
+
+            <li th:if="${#authentication.name == 'anonymousUser'}" class="nav-item"><a class="nav-link active" href="acceso.html">Crear cuenta / Iniciar sesión</a> </li>
+                    
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="inicio" class="hero-section py-5 py-lg-6">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-6">
+            <span class="badge rounded-pill clinic-badge mb-3">Entregable 2 · Lógica de negocio con Spring</span>
+            <h1 class="display-5 fw-bold mb-3">Sistema Web para optimizar la gestión de citas de una clínica en Lima</h1>
+            <p class="lead text-white mb-4">
+              Aplicación Spring Boot con Thymeleaf para registrar pacientes, organizar citas médicas
+              y mostrar servicios con renderizado dinámico del lado del servidor.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-3">
+              <a th:href="@{/agenda}" class="btn btn-primary btn-lg">Registrar cita</a>
+              <a th:href="@{/agenda}" class="btn btn-outline-dark btn-lg">Ver agenda visual</a>
+            </div>
+            <div class="row g-3 mt-4">
+              <div class="col-sm-4">
+                <div class="metric-card">
+                  <strong>24</strong>
+                  <span>cupos visibles</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="metric-card">
+                  <strong>6</strong>
+                  <span>especialidades</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="metric-card">
+                  <strong>SpringBoot</strong>
+                 <span>Boot + MVC</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="hero-panel shadow-lg">
+              <div class="hero-panel-top">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="hero-panel-body">
+                <div class="appointment-preview">
+                  <p class="text-uppercase small fw-semibold mb-2 text-primary">Resumen de hoy</p>
+                  <h2 class="h4">Atención ordenada y segura</h2>
+                  <ul class="list-unstyled mt-4 mb-0">
+                    <li>Registro de pacientes con validación</li>
+                    <li>Agenda renderizada con Thymeleaf</li>
+                    <li>Controladores Spring MVC</li>
+                    <li>Detalle de citas en modal</li>
+                  </ul>
+                </div>
+                <div class="preview-card">
+                  <span class="preview-tag">Próxima cita</span>
+                  <h3 class="h5 mt-3 mb-2">Cardiología · 10:30 a. m.</h3>
+                  <p class="mb-2 text-secondary">Paciente: Ana Torres</p>
+                  <p class="mb-0 text-secondary">Médico: Dr. Ramírez</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section id="servicios" class="py-5">
+      <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end mb-4 gap-3">
+          <div>
+            <p class="section-eyebrow mb-2">Servicios</p>
+            <h2 class="section-title mb-0">Especialidades disponibles</h2>
+          </div>
+          
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6 col-xl-4">
+            <article class="card service-card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <span class="service-icon">01</span>
+                <h3 class="h5 mt-4">Medicina General</h3>
+                <p class="text-secondary">Evaluación inicial, chequeos preventivos y seguimiento clínico integral.</p>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <article class="card service-card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <span class="service-icon">02</span>
+                <h3 class="h5 mt-4">Pediatría</h3>
+                <p class="text-secondary">Controles de crecimiento, vacunación y consultas para niños y adolescentes.</p>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <article class="card service-card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <span class="service-icon">03</span>
+                <h3 class="h5 mt-4">Cardiología</h3>
+                <p class="text-secondary">Control cardiovascular, revisión de exámenes y monitoreo preventivo.</p>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <article class="card service-card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <span class="service-icon">04</span>
+                <h3 class="h5 mt-4">Odontología</h3>
+                <p class="text-secondary">Limpieza dental, diagnóstico oral y tratamientos básicos programados.</p>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <article class="card service-card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <span class="service-icon">05</span>
+                <h3 class="h5 mt-4">Ginecología</h3>
+                <p class="text-secondary">Controles periódicos y orientación preventiva para la salud femenina.</p>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <article class="card service-card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <span class="service-icon">06</span>
+                <h3 class="h5 mt-4">Laboratorio</h3>
+                <p class="text-secondary">Toma de muestras y coordinación de análisis clínicos complementarios.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+    </div>
+  </footer>
+
+  <script src="../assets/js/bootstrap_bundle_min.js"></script>
+  <script src="../models/Usuario.js"></script>
+  <script src="../models/Paciente.js"></script>
+  <script src="../models/Cita.js"></script>
+  <script src="../models/index.js"></script>
+  <script src="../controllers/permisos.js"></script>
+  <script src="../controllers/app.js"></script>
+</body>
+</html>

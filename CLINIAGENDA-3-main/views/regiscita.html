@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CliniAgenda | Reservar cita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="../assets/css/bootstrap_min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <nav class="navbar navbar-light navbar-expand-lg sticky-top clinic-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">CliniAgenda</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"> <a class="nav-link"
+              href="pacientes.html">Pacientes</a></li>
+
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link"
+              href="agenda.html">Agenda</a></li>
+
+          <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="nav-item"><a class="nav-link"
+              href="paciente-form.html">+ Nuevo paciente</a></li>
+
+          <li id="navReservarCita" th:if="${#authorization.expression('hasAnyRole(''ADMIN'', ''USER'', ''PACIENTE'')')}" class="nav-item"><a
+              class="btn btn-primary ms-lg-2" href="regiscita.html">Reservar cita</a></li>
+
+          <li th:if="${#authentication.name == 'anonymousUser'}" class="nav-item"><a class="nav-link active"
+              href="acceso.html">Crear cuenta / Iniciar sesión</a> </li>
+
+          <li class="nav-item theme-nav-item ms-lg-2">
+            <button type="button" id="btn-theme-toggle" class="btn btn-outline-secondary btn-sm" aria-label="Alternar modo oscuro">
+              🌙
+            </button>
+          </li>
+
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow-1">
+
+    <!-- =====================================================
+         SECCIÓN: REGISTRAR NUEVA CITA
+         El formulario usa th:action y th:object para vincularse
+         al objeto "cita" que envía PacienteController
+    ====================================================== -->
+    <section id="reserva" class="py-5">
+      <div class="container">
+        <div class="row g-4 align-items-start">
+
+          <!-- Columna informativa -->
+          <div class="col-lg-5">
+            <p class="section-eyebrow mb-2">Nueva reserva</p>
+            <h2 class="section-title" id="bookingTitle">Registrar una cita</h2>
+            <p class="text-secondary" id="bookingExplanation">
+              Selecciona el paciente, el servicio, el médico y un horario disponible. Las solicitudes hechas por
+              pacientes quedan pendientes hasta que recepción las confirme; las citas registradas por recepción quedan
+              confirmadas.
+            </p>
+            <div class="info-box">
+              <strong>Cómo funciona:</strong>
+              <ul class="mb-0 mt-2">
+                <li id="bookingStep1">Una reserva de paciente debe ser confirmada por recepción.</li>
+                <li id="bookingStep2">Una cita registrada por recepción queda confirmada.</li>
+                <li id="bookingStep3">Recepción puede preparar el mensaje de WhatsApp después de confirmar.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Formulario vinculado al modelo Cita -->
+          <div class="col-lg-7">
+            <div class="card border-0 shadow-sm booking-card">
+              <div class="card-body p-4 p-lg-5">
+
+                <!--
+                  th:action  → POST a /agenda (PacienteController)
+                  th:object  → vincula campos con el objeto Cita
+                  method     → siempre POST para envío de formulario
+                -->
+                <form th:action="@{/agenda}" th:object="${cita}" method="post" novalidate>
+
+                  <div id="mensajeReservaPaciente" class="alert alert-success d-none" role="status"></div>
+
+
+                  <!-- Errores globales de validación -->
+
+
+                  <div class="row g-3">
+
+                    <!-- Paciente -->
+                    <input type="hidden" id="patientDni" name="patientDni">
+                    <div class="col-md-6">
+                      <label for="patientName" class="form-label">Paciente</label>
+                      <!--
+                        th:field="*{patient}" es equivalente a:
+                          id="patient" name="patient" th:value="${cita.patient}"
+                        Spring lo vincula automáticamente con Cita.patient
+                      -->
+                      <div class="input-group">
+                        <input type="text" th:field="*{patient}" id="patientName" class="form-control" readonly
+                          th:classappend="${#fields.hasErrors('patient')} ? 'is-invalid'"
+                          placeholder="Selecciona un paciente registrado">
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                          data-bs-target="#modalBuscarPaciente">
+                          Buscar
+                        </button>
+                      </div>
+                      <div class="invalid-feedback" th:errors="*{patient}"></div>
+                    </div>
+
+                    <!-- Médico -->
+                    <div class="col-md-6">
+                      <label for="doctorName" class="form-label">Médico</label>
+                      <div class="input-group">
+                        <input type="text" th:field="*{doctor}" id="doctorName" class="form-control" readonly
+                          th:classappend="${#fields.hasErrors('doctor')} ? 'is-invalid'"
+                          placeholder="Selecciona un médico">
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                          data-bs-target="#modalBuscarMedico">
+                          Buscar
+                        </button>
+                      </div>
+                      <div class="invalid-feedback" th:errors="*{doctor}"></div>
+                    </div>
+
+                    <!-- Servicio -->
+                    <div class="col-md-6">
+                      <label for="serviceSelect" class="form-label">Especialidad o servicio</label>
+                      <select th:field="*{service}" id="serviceSelect" class="form-select"
+                        th:classappend="${#fields.hasErrors('service')} ? 'is-invalid'">
+                        <option value="">Seleccionar servicio</option>
+                        <option value="Medicina General">Medicina General</option>
+                        <option value="Pediatría">Pediatría</option>
+                        <option value="Cardiología">Cardiología</option>
+                        <option value="Odontología">Odontología</option>
+                        <option value="Ginecología">Ginecología</option>
+                        <option value="Laboratorio">Laboratorio</option>
+                      </select>
+                      <div class="invalid-feedback" th:errors="*{service}"></div>
+                    </div>
+
+                    <!-- Fecha -->
+                    <div class="col-md-6">
+                      <label for="appointmentDate" class="form-label">Fecha</label>
+                      <input type="date" th:field="*{date}" id="appointmentDate" class="form-control"
+                        th:classappend="${#fields.hasErrors('date')} ? 'is-invalid'"
+                        th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                      <div class="invalid-feedback" th:errors="*{date}"></div>
+                    </div>
+
+                    <!-- Hora -->
+                    <div class="col-md-6">
+                      <label for="appointmentTime" class="form-label">Hora</label>
+                      <select th:field="*{time}" id="appointmentTime" class="form-select"
+                        th:classappend="${#fields.hasErrors('time')} ? 'is-invalid'">
+                        <option value="">Seleccionar hora</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                      </select>
+                      <div class="invalid-feedback" th:errors="*{time}"></div>
+                    </div>
+
+                    <!-- Modalidad -->
+                    <div class="col-md-6">
+                      <label for="appointmentMode" class="form-label">Modalidad</label>
+                      <select th:field="*{mode}" id="appointmentMode" class="form-select"
+                        th:classappend="${#fields.hasErrors('mode')} ? 'is-invalid'">
+                        <option value="">Seleccionar modalidad</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Teleconsulta">Teleconsulta</option>
+                      </select>
+                      <div class="invalid-feedback" th:errors="*{mode}"></div>
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="col-12">
+                      <label for="appointmentNotes" class="form-label">Observaciones</label>
+                      <textarea th:field="*{notes}" id="appointmentNotes" class="form-control" rows="3"
+                        placeholder="Síntomas o comentarios breves"></textarea>
+                    </div>
+
+                  </div>
+
+
+                  <!-- /row -->
+
+                  <div id="errorHorarioOcupado" class="alert alert-danger mt-3 d-none" role="alert">
+                    El doctor ya tiene una cita en esa fecha y hora. Selecciona otro horario.
+                  </div>
+
+                  <div class="mt-4 d-flex justify-content-between align-items-center">
+
+                    <button type="button" class="btn btn-outline-primary" id="btnValidarCita">
+                      Validar
+                    </button>
+
+                    <button type="button" class="btn btn-primary" id="btnRegistrarCita">
+                      Guardar cita
+                    </button>
+
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- =====================================================
+         MODAL: Buscar paciente registrado
+    ====================================================== -->
+    <div class="modal fade" id="modalBuscarPaciente" tabindex="-1" aria-labelledby="modalBuscarPacienteLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="modalBuscarPacienteLabel">Seleccionar paciente</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="buscarPacienteInput" class="form-control mb-3" placeholder="Buscar por nombre o DNI...">
+            <div id="listaPacientes" class="list-group" style="max-height: 320px; overflow-y: auto;"></div>
+            <p id="sinPacientes" class="text-secondary text-center mt-3 mb-0 d-none">
+              No hay pacientes registrados todavía. <a href="paciente-form.html">Registrar uno</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: Buscar médico
+    ====================================================== -->
+    <div class="modal fade" id="modalBuscarMedico" tabindex="-1" aria-labelledby="modalBuscarMedicoLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="modalBuscarMedicoLabel">Seleccionar médico</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="buscarMedicoInput" class="form-control mb-3" placeholder="Buscar por nombre o especialidad...">
+            <div id="listaMedicos" class="list-group" style="max-height: 320px; overflow-y: auto;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/bootstrap_bundle_min.js"></script>
+    <script src="../models/Usuario.js"></script>
+    <script src="../models/Paciente.js"></script>
+    <script src="../models/Cita.js"></script>
+    <script src="../models/index.js"></script>
+    <script src="../controllers/permisos.js"></script>
+    <script src="../controllers/app.js"></script>
+    <script src="../controllers/regiscita.js"></script>
+</body>
+
+</html>
